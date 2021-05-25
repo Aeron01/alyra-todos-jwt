@@ -8,7 +8,7 @@ const DeleteTodo = ({ todo }) => {
     fetch(`${process.env.REACT_APP_API_URL}/todos/${todo.id}`, {
       method: "DELETE",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json", Authorization: "Bearer " + user.access_token,
       },
     })
       .then((response) => {

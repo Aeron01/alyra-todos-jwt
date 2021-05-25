@@ -1,12 +1,14 @@
 import { useDarkMode } from "../context/DarkModeContext"
 import { useTodosDispatch } from "../context/TodosDispatchContext"
 import { useIsMounted } from "../hooks/useIsMounted"
+import { useUser } from "../context/UserContextProvider"
 
 const AddTodoForm = () => {
   const darkMode = useDarkMode()
   const dispatch = useTodosDispatch()
   const darkModeClass = darkMode ? "text-white bg-dark" : ""
   const isMounted = useIsMounted()
+  const { user } = useUser()
 
   const handleFormSubmit = (event) => {
     event.preventDefault()
@@ -15,7 +17,7 @@ const AddTodoForm = () => {
     fetch(`${process.env.REACT_APP_API_URL}/todos`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json", Authorization: "Bearer " + user.access_token,
       },
       body: JSON.stringify({
         text: newTodoText,
@@ -24,7 +26,7 @@ const AddTodoForm = () => {
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error(`Something went wrong: ${response.textStatus}`)
+          throw new Error(`Something went wrong: ${response.statusText}`)
         }
         return response.json()
       })

@@ -33,5 +33,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "main": "index.js",
+  "repository": "https://github.com/Aeron01/alyra-todos-jwt.git",
+  "author": "Aeron01 <one.soulreaper@gmail.com>",
+  "license": "MIT"
 }

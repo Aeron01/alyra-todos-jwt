@@ -9,7 +9,7 @@ const ToggleTodo = ({ todo }) => {
     fetch(`${process.env.REACT_APP_API_URL}/todos/${todo.id}`, {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json", Authorization: "Bearer " + user.access_token,
       },
       body: JSON.stringify({
         ...todo,
