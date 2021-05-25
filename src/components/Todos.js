@@ -4,7 +4,7 @@ import AddTodoForm from "./AddTodoForm"
 import { todosReducer } from "../reducers/todosReducer"
 import { TodosDispatchContext } from "../context/TodosDispatchContext"
 import { useIsMounted } from "../hooks/useIsMounted"
-import { useUser } from "../context/UserContextProvider"
+import { useUser } from "../context/UserContext"
 
 const initialState = {
   todos: [],
@@ -21,7 +21,11 @@ const Todos = () => {
 
   useEffect(() => {
     dispatch({ type: "FETCH_INIT" })
-    fetch(`${process.env.REACT_APP_API_URL}/todos`, { Authorization: "Bearer " + user.access_token, },)
+    fetch(`${process.env.REACT_APP_API_URL}/todos`, {
+      headers: {
+        Authorization: "Bearer " + user.access_token,
+      },
+    })
       .then((response) => {
         console.log(response)
         if (response.status === 401) {
@@ -43,7 +47,7 @@ const Todos = () => {
           dispatch({ type: "FETCH_FAILURE", payload: error.message })
         }
       })
-  }, [isMounted])
+  }, [isMounted, user, userDispatch])
 
   return (
     <main>

@@ -1,19 +1,16 @@
 import { useHistory } from "react-router-dom"
-import { useUser } from "../context/UserContextProvider"
-import { useIsMounted } from "../hooks/useIsMounted"
+import { useUser } from "../context/UserContext"
 
 const Login = () => {
-  const history = useHistory()
   const { error, loading, userDispatch } = useUser()
-  const isMounted = useIsMounted()
-  const handleFormSubmit = e => {
+  const history = useHistory()
+  const handleFormSubmit = (e) => {
     e.preventDefault()
     const login = e.target.elements.login.value
     const password = e.target.elements.password.value
-    userDispatch({
-      type: "LOGIN_INIT",
-    })
-    fetch(`${process.env.REACT_APP_API_URL}/auth/login`, {
+    // initialiser login
+    userDispatch({ type: "LOGIN_INIT" })
+    fetch("http://localhost:4000/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -23,31 +20,26 @@ const Login = () => {
         password,
       }),
     })
-      .then(response => {
+      .then((response) => {
+        console.log(response)
         if (!response.ok) {
-          throw new Error(`Erreur, ${response.statusText}`)
+          throw new Error(`Error ${response.statusText}`)
         }
         return response.json()
       })
-      .then(result => {
-        if (isMounted) {
-          userDispatch({
-            type: "LOGIN_SUCCESS",
-            payload: result,
-          })
-          // si ok nous allons rediriger l'utilisateur vers "todos"
-          history.replace("/todos")
-        }
+      .then((result) => {
+        console.log(result)
+        // dispatch LOGIN SUCCESS
+        userDispatch({ type: "LOGIN_SUCCESS", payload: result })
+        history.push("/todos")
       })
-      .catch(e => {
-        if (isMounted) {
-          userDispatch({
-            type: "LOGIN_FAILURE",
-            payload: e.message,
-          })
-        }
+      .catch((e) => {
+        console.error(e)
+        // dispatch LOGIN FAILURE
+        userDispatch({ type: "LOGIN_FAILURE", payload: e.message })
       })
   }
+
   return (
     <section>
       <h2 className="text-center">Log in</h2>
